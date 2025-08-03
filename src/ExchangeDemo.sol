@@ -24,6 +24,23 @@ contract ExchangeDemo {
         }
     }
 
+    /**
+     * @notice Withdraws funds from one of the contract's exchange subaccounts to its main balance.
+     * @param subaccountID The source subaccount ID.
+     * @param denom The denomination of the asset to withdraw.
+     * @param amount The quantity of the asset to withdraw.
+     * @return success Boolean indicating if the withdrawal was successful.
+     */
+    function withdraw(string calldata subaccountID, string calldata denom, uint256 amount) external returns (bool) {
+        try exchange.withdraw(address(this), subaccountID, denom, amount) returns (bool success) {
+            return success;
+        } catch Error(string memory reason) {
+            revert(string(abi.encodePacked("Withdraw error: ", reason)));
+        } catch {
+            revert("Unknown error during withdraw");
+        }
+    }
+
     function spotOrdersByHashes(IExchangeModule.SpotOrdersRequest calldata request)
         external
         returns (IExchangeModule.TrimmedSpotLimitOrder[] memory)

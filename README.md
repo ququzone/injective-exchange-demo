@@ -1,3 +1,3 @@
-### Deployments
+## Deployments
 
-ExchangeDemo contract deployed to [0x8593639D727971C7C90e675EE86A27364c7cBC65](https://testnet.blockscout.injective.network/address/0x8593639D727971C7C90e675EE86A27364c7cBC65)
+ExchangeDemo contract deployed to [0x96bCd38fe64A5CaDb752c5f84aedCEf47654a633](https://testnet.blockscout.injective.network/address/0x96bCd38fe64A5CaDb752c5f84aedCEf47654a633)
