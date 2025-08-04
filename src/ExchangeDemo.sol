@@ -14,7 +14,11 @@ contract ExchangeDemo {
      * @param amount The quantity of the asset to deposit.
      * @return success Boolean indicating if the deposit was successful.
      */
-    function deposit(string calldata subaccountID, string calldata denom, uint256 amount) external returns (bool) {
+    function deposit(string calldata subaccountID, string calldata denom, uint256 amount)
+        external
+        payable
+        returns (bool)
+    {
         try exchange.deposit(address(this), subaccountID, denom, amount) returns (bool success) {
             return success;
         } catch Error(string memory reason) {
@@ -41,6 +45,29 @@ contract ExchangeDemo {
         }
     }
 
+    function subaccountPositions(string calldata subaccountID)
+        external
+        view
+        returns (IExchangeModule.DerivativePosition[] memory positions)
+    {
+        return exchange.subaccountPositions(subaccountID);
+    }
+
+    function createDerivativeLimitOrder(IExchangeModule.DerivativeOrder calldata order)
+        external
+        returns (IExchangeModule.CreateDerivativeLimitOrderResponse memory response)
+    {
+        try exchange.createDerivativeLimitOrder(address(this), order) returns (
+            IExchangeModule.CreateDerivativeLimitOrderResponse memory resp
+        ) {
+            return resp;
+        } catch Error(string memory reason) {
+            revert(string(abi.encodePacked("CreateDerivativeLimitOrder error: ", reason)));
+        } catch {
+            revert("Unknown error during createDerivativeLimitOrder");
+        }
+    }
+
     function spotOrdersByHashes(IExchangeModule.SpotOrdersRequest calldata request)
         external
         returns (IExchangeModule.TrimmedSpotLimitOrder[] memory)
@@ -48,18 +75,18 @@ contract ExchangeDemo {
         return exchange.spotOrdersByHashes(request);
     }
 
-    function createSpotMarketOrder(IExchangeModule.SpotOrder calldata order)
+    function createSpotLimitOrder(IExchangeModule.SpotOrder calldata order)
         external
-        returns (IExchangeModule.CreateSpotMarketOrderResponse memory)
+        returns (IExchangeModule.CreateSpotLimitOrderResponse memory)
     {
-        try exchange.createSpotMarketOrder(address(this), order) returns (
-            IExchangeModule.CreateSpotMarketOrderResponse memory resp
+        try exchange.createSpotLimitOrder(address(this), order) returns (
+            IExchangeModule.CreateSpotLimitOrderResponse memory resp
         ) {
             return resp;
         } catch Error(string memory reason) {
-            revert(string(abi.encodePacked("CreateSpotMarketOrder error: ", reason)));
+            revert(string(abi.encodePacked("CreateSpotLimitOrder error: ", reason)));
         } catch {
-            revert("Unknown error during createSpotMarketOrder");
+            revert("Unknown error during createSpotLimitOrder");
         }
     }
 
